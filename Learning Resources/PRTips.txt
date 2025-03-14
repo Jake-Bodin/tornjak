@@ -1,0 +1,24 @@
+Make a tiny PR!
+In your onboarding, you probably encountered at least one problem or typo
+Make your first PR with this documentation
+https://www.freecodecamp.org/news/how-to-make-your-first-pull-request-on-github-3/
+NOTE: `git commit -sm` to add signoff to pass DCO
+
+Make sure your line endings are properly formmated in the PR
+
+Windows Line Ending Troubleshooting
+On Windows, files use CRLF (\r\n) line endings, but Git (Linux) uses LF (\n) line endings.
+
+We can check the status of line endings using:
+
+git config --global core.autocrlf
+If there is no status, Windows will use its own line endings. We can fix this issue by setting:
+
+git config --global core.autocrlf true
+Now if we run the command in step 2 again:
+
+git config --global core.autocrlf
+Windows should now output:
+
+true
+Files are now checked out with CRLF (Windows format), and files are committed with LF (Unix format).

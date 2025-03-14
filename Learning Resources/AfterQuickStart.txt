@@ -1,0 +1,71 @@
+Helpful commands
+
+When doing the quickstart, if you run into snags, try the following commands:
+
+Debugging commands
+Make sure minikube is running:
+minikube status
+See what resources are deployed on the cluster. The -A shows all namespaces
+kubectl get all -A
+See what resources are in the spire namespace (this is the -n flag)
+kubectl get all -n spire
+View the yaml-format of the deployed spire-server-0 pod in the spire namespace (this should match whatever’s in server-statefulset.yaml basically)
+kubectl get po -n spire spire-server-0 -oyaml
+See the spec and status of the spire-server-0 pod in the spire namespace
+kubectl describe po -n spire spire-server-0
+See the logs of a container in the pod
+kubectl logs -n spire spire-server-0
+kubectl logs -n spire spire-server-0 -c tornjak-backend
+See the configmap deployed
+kubectl get cm -n spire tornjak-agent -oyaml
+Additional kubectl docs:
+kubectl --help
+Tips for Windows
+Install Docker Desktop THEN Minikube
+Before copy-paste the command, there are some Windows-specific notes
+In the past, I believe most people have run this in Powershell. Eventually will have to run certain commands in WSL, but shouldn’t be the case for the quickstart
+If Minikube does not work, try these alternatives:
+Kind: https://kind.sigs.k8s.io/ 
+K3d: https://k3d.io/v5.7.4/#learning 
+
+Next steps
+If you get done with the quickstart, please help each other, and you can begin working on building your own Docker images. Typically for cloud development, to fully test your new code in a cluster, you have to:
+Build the container image
+Load the image into the cluster
+Deploy the image
+
+Build the images
+To check that you can build these images, you basically want to be able to:
+Go to the root directory of the local clone of the Tornjak repo
+Run the following make commands:
+make image-tornjak-backend
+make image-tornjak-frontend
+Do docker image list and it should list new images that you have build locally. 
+
+You can try these straight in Powershell, some people have success with this. Otherwise, we will have to install WSL:
+WSL Install instructions: https://learn.microsoft.com/en-us/windows/wsl/install
+Just running wsl --install in Powershell should work
+Then run wsl -l -v to check that the distribution * is running version 2
+Then follow the instructions here: https://docs.docker.com/desktop/wsl/
+After that, when you open powershell, then run wsl it should initiate an Ubuntu-like shell and you can try the make commands above again
+
+After this, you should try running the make commands within WSL. 
+
+
+Open a DockerHub account: https://hub.docker.com/
+Run the images
+After running make successfully:
+Load the images into minikube
+docker image tag <old-image> <new-image>
+https://minikube.sigs.k8s.io/docs/handbook/pushing/#7-loading-directly-to-in-cluster-container-runtime 
+Modify the server-statefulset.yaml to use the tornjak backend image
+Apply change
+kubectl apply -f server-statefulset.yaml
+kubectl delete po -n spire spire-server-0
+Run the port-forward again
+
+
+Stuff for testing Collin and Mason’s Refactored Code:
+make vendor
+golangci-lint run --timeout 7m
+This is if you have dependency changes

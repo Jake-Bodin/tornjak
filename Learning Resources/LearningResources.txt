@@ -1,0 +1,32 @@
+NOTE: For the below, start with the bolded items
+
+SPIFFE/SPIRE Links
+Intro video: https://www.youtube.com/watch?v=-XGKybqTfZo
+Book: https://spiffe.io/pdf/Solving-the-bottom-turtle-SPIFFE-SPIRE-Book.pdf
+SPIRE Concepts: https://spiffe.io/docs/latest/spire-about/spire-concepts/ 
+SLACK CHANNEL: 
+join spiffe.slack.com
+Message me (Maia Iyer) to add to the private channel
+
+Tornjak
+Repo: https://github.com/spiffe/tornjak
+List of blogs: https://github.com/spiffe/tornjak/blob/dev/docs/blogs.md 
+(Start from earliest 3)
+Quickstart: https://github.com/spiffe/tornjak/tree/dev/docs/quickstart 
+Install Docker Desktop, THEN install Minikube
+
+Technology links
+Kubernetes [no install, just learning, reading through docs]
+General docs: https://kubernetes.io/docs/home/
+Maybe start here: https://kubernetes.io/docs/concepts/overview/
+And some of the basics are outlined here: https://kubernetes.io/docs/concepts/workloads/
+Rancher Desktop (unless you have docker desktop) [https://rancherdesktop.io/] 
+Golang [https://go.dev/] (installation) 
+Interactive Tour of Go: https://go.dev/tour/welcome/1 (Tutorial)
+Golangci-lint [https://golangci-lint.run/welcome/install/] 
+MAYBE need gcc
+Javascript/Typescript
+React [https://react.dev/learn]
+Getting started - [https://legacy.reactjs.org/docs/getting-started.html]
+Typescript [https://react.dev/learn/typescript]
+React-Typescript testing [https://nabendu82.medium.com/react-testing-with-jest-and-rtl-in-typescript-a8d62f7570ff]

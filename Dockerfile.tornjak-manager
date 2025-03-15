@@ -1,66 +1,31 @@
-FROM --platform=$BUILDPLATFORM tonistiigi/xx:1.3.0 as xx
-# ------------------------------------------------------------------------------
-# 2) Builder stage - uses Go + tonistiigi/xx
-# ------------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM golang:1.20-alpine3.18 AS builder
-      
-# Install required Alpine packages for building
-RUN apk add --no-cache build-base clang lld
-      
-# Copy cross-compilation scripts/tools from the xx stage
-COPY --link --from=xx / / 
-      
-# Create the build directory and copy your source
-WORKDIR /usr/src/myapp
-COPY . /usr/src/myapp
-      
-# Let Docker know about the architecture and OS
-ARG TARGETOS
-ARG TARGETARCH
-      
-# CGO_ENABLED=1 if you need C-based modules (e.g., SQLite)
+FROM golang:1.22-alpine3.19 AS builder
+
+# Install necessary tools
+RUN apk add --no-cache build-base
+
+# Set working directory
+WORKDIR /app
+
+# Copy the current directory contents into the container
+COPY . .
+
+# Enable CGO
 ENV CGO_ENABLED=1
-      
-# Download modules, wrap with xx-go for cross-compiling
+
+# Download dependencies
 RUN go mod download
-RUN xx-go --wrap
-RUN xx-apk add musl-dev gcc
-      
-# Build your tornjak-manager binary. 
-# The if [ "$TARGETARCH" = "arm64" ]... line sets the CC properly for ARM64.
-RUN if [ "$TARGETARCH" = "arm64" ]; then \
-      CC=aarch64-alpine-linux-musl; \
-      fi \
-      && go build \
-            --tags 'sqlite_json' \
-            -mod=vendor \
-            -ldflags '-s -w -linkmode external -extldflags "-static"' \
-            -o bin/tornjak-manager ./cmd/manager/main.go
-      
-FROM alpine:latest AS runtime
-      
-# Set up your working directory
-WORKDIR /
-      
-# Copy the final binary from builder stage
-COPY --from=builder /usr/src/myapp/bin/tornjak-manager /tornjak-manager
-      
-# Optionally install runtime dependencies (if any)
-RUN apk add --no-cache curl
-      
-# Expose port if needed, e.g. 10000
-# EXPOSE 10000
-      
-# Set the entrypoint
-ENTRYPOINT ["/tornjak-manager"]
-      
-# Add version and other metadata to the image
-ARG version
-ARG github_sha
-LABEL org.opencontainers.image.description="Tornjak manager ($version): https://github.com/spiffe/tornjak/releases/tag/$version" \
-      org.opencontainers.image.source="https://github.com/spiffe/tornjak" \
-      org.opencontainers.image.documentation="https://github.com/spiffe/tornjak/tree/main/docs"
-      
-ENV VERSION=$version
-ENV GITHUB_SHA=$github_sha
-      
+
+# Build the Tornjak Manager binary
+RUN go build -mod=vendor -ldflags '-s -w -linkmode external -extldflags "-static"' -o bin/tornjak-manager ./cmd/manager/main.go
+
+# Final runtime image
+FROM alpine:3.19
+
+# Create a working directory
+RUN mkdir -p /opt/tornjak
+
+# Copy the compiled binary
+COPY --from=builder /app/bin/tornjak-manager /opt/tornjak/tornjak-manager
+
+# Run the Tornjak Manager
+ENTRYPOINT ["/opt/tornjak/tornjak-manager"]

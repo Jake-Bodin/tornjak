@@ -183,7 +183,7 @@ func (s *Server) HandleRequests() {
 	// Manger-specific
 	rtr.HandleFunc("/manager-api/server/list", corsHandler(s.serverList))
 	rtr.HandleFunc("/manager-api/server/register", corsHandler(s.serverRegister))
-
+	rtr.HandleFunc("/manager-api/server/delete/{serverName}", corsHandler(s.serverDelete)).Methods("DELETE")
 	// SPIRE server info calls
 	rtr.HandleFunc("/manager-api/healthcheck/{server:.*}", corsHandler(s.apiServerProxyFunc("/api/v1/spire/healthcheck", http.MethodGet)))
 	rtr.HandleFunc("/manager-api/serverinfo/{server:.*}", corsHandler(s.apiServerProxyFunc("/api/v1/spire/serverinfo", http.MethodGet)))
@@ -325,6 +325,30 @@ func (s *Server) serverRegister(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		emsg := fmt.Sprintf("Error: %v", err.Error())
 		retError(w, emsg, http.StatusBadRequest)
+		return
+	}
+}
+
+
+func (s *Server) serverDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	serverName := vars["serverName"]
+
+	fmt.Printf("Endpoint Hit: Server Delete (%s)\n", serverName)
+
+	err := s.db.DeleteServer(serverName)
+	if err != nil {
+		emsg := fmt.Sprintf("Error deleting server: %v", err.Error())
+		retError(w, emsg, http.StatusInternalServerError)
+		return
+	}
+
+	cors(w, r)
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write([]byte("Server deleted successfully"))
+	if err != nil {
+		emsg := fmt.Sprintf("Error sending response: %v", err.Error())
+		retError(w, emsg, http.StatusInternalServerError)
 		return
 	}
 }

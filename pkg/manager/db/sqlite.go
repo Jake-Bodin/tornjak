@@ -96,3 +96,17 @@ func (db *LocalSqliteDb) GetServer(name string) (types.ServerInfo, error) {
 
 	return sinfo, nil
 }
+
+func (db *LocalSqliteDb) DeleteServer(serverName string) error {
+    // If the primary key column is servername, use that:
+    stmt, err := db.database.Prepare("DELETE FROM servers WHERE servername = ?")
+    if err != nil {
+        return err
+    }
+    defer stmt.Close()
+
+    _, err = stmt.Exec(serverName)
+    return err
+}
+
+

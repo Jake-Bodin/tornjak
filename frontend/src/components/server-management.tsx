@@ -48,6 +48,13 @@ const Server = (props: { server: ServersList }) => (
     <td>{props.server.address}</td>
     <td>{(props.server.mtls && "mTLS") || "None"}</td>
     <td>{(props.server.tls && "TLS") || "None"}</td>
+    <td>
+      <button 
+        className="btn btn-danger"
+        onClick={() => props.onDelete(props.server.name)}>
+        Delete
+      </button>
+    </td>
   </tr>
 )
 

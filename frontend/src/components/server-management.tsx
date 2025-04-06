@@ -100,9 +100,12 @@ class ServerManagement extends Component<ServerManagementProp, ServerManagementS
   serverList() {
     if (typeof this.props.globalServersList !== 'undefined') {
       return this.props.globalServersList.map(s => {
-        return <Server key={s.name}
-          server={s} />;
-      })
+        return (<Server key={s.name}
+          server={s} 
+          onDelete={this.handleDeleteServer} 
+          />
+      );
+    });
     } else {
       return ""
     }
@@ -251,6 +254,23 @@ class ServerManagement extends Component<ServerManagementProp, ServerManagementS
 
   }
 
+  handleDeleteServer = async (serverName: string) => {
+    if (!window.confirm(`Are you sure you want to delete server "${serverName}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await axios.delete(GetApiServerUri(`/manager-api/server/delete/${serverName}`));
+      if (response.status === 200) {
+        showResponseToast("Server deleted successfully", { kind: "success" });
+        this.refreshServerState();
+      } else {
+        throw new Error(`Deletion failed: ${response.statusText}`);
+      }
+    } catch (error) {
+      showResponseToast(error, { caption: "Failed to delete server." });
+    }
+  };
 
   render() {
     if (!IsManager) {

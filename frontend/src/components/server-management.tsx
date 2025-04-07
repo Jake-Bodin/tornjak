@@ -42,7 +42,7 @@ type ServerManagementState = {
   statusOK: string,
 }
 
-const Server = (props: { server: ServersList }) => (
+const Server = (props: { server: ServersList, onDelete: (name: string) => void }) => (
   <tr>
     <td>{props.server.name}</td>
     <td>{props.server.address}</td>

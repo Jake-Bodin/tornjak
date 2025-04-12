@@ -51,7 +51,7 @@ const Server = (props: { server: ServersList, onDelete: (name: string) => void }
     <td>{(props.server.tls && "TLS") || "None"}</td>
     <td>
       <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-        <Button kind="danger" size="sm" onClick={() => props.onDelete(props.server.name)}>
+        <Button className="btn-danger" kind="danger" size="sm" onClick={() => props.onDelete(props.server.name)}>
           Delete
         </Button>
       </td>

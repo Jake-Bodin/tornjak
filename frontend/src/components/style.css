@@ -655,3 +655,12 @@
 .entry-edit-container, .fed-edit-container {
   display: flex;
 }
+
+.btn-danger {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}

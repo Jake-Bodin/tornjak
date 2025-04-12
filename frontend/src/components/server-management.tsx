@@ -11,6 +11,7 @@ import { ServersList } from './types'
 import { RootState } from 'redux/reducers';
 import { ToastContainer } from 'react-toastify';
 import {
+  Button,
   TextInput,
   Accordion,
   AccordionItem,
@@ -49,11 +50,11 @@ const Server = (props: { server: ServersList, onDelete: (name: string) => void }
     <td>{(props.server.mtls && "mTLS") || "None"}</td>
     <td>{(props.server.tls && "TLS") || "None"}</td>
     <td>
-      <button 
-        className="btn btn-danger"
-        onClick={() => props.onDelete(props.server.name)}>
-        Delete
-      </button>
+      <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+        <Button kind="danger" size="sm" onClick={() => props.onDelete(props.server.name)}>
+          Delete
+        </Button>
+      </td>
     </td>
   </tr>
 )

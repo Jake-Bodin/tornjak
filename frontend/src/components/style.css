@@ -249,6 +249,19 @@
   padding: 30px 30px 30px 30px;
 }
 
+.bx--btn--sm:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  background: #161616;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  top: -28px;
+  font-size: 10px;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
 .accordion-entry-form {
   padding: 30px 30px 30px 30px;
 }

@@ -12,6 +12,7 @@ import { RootState } from 'redux/reducers';
 import { ToastContainer } from 'react-toastify';
 import {
   Button,
+  Trashcan,
   TextInput,
   Accordion,
   AccordionItem,
@@ -51,9 +52,13 @@ const Server = (props: { server: ServersList, onDelete: (name: string) => void }
     <td>{(props.server.tls && "TLS") || "None"}</td>
     <td>
       <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-        <Button className="btn-danger" kind="danger" size="sm" onClick={() => props.onDelete(props.server.name)}>
-          Delete
-        </Button>
+      <Button
+        kind="danger--tertiary"
+        size="sm"
+        renderIcon={TrashCan}
+        iconDescription="Delete server"
+        onClick={() => props.onDelete(props.server.name)}
+      />
       </td>
     </td>
   </tr>
@@ -259,9 +264,11 @@ class ServerManagement extends Component<ServerManagementProp, ServerManagementS
     if (!window.confirm(`Are you sure you want to delete server "${serverName}"?`)) {
       return;
     }
-
+    this.setState({ deleting: serverName });
     try {
+      this.setState({ deleting: serverName }); 
       const response = await axios.delete(GetApiServerUri(`/manager-api/server/delete/${serverName}`));
+      this.setState({ deleting: undefined });  
       if (response.status === 200) {
         showResponseToast("Server deleted successfully", { kind: "success" });
         this.refreshServerState();
